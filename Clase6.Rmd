@@ -1,0 +1,836 @@
+---
+title: "El lenguaje como barrera de entrada al mercado laboral: un enfoque de género"
+author: "Ana Díaz, Luz Salas, Claudia Piras, Agustina Suaya"
+institute:  "Universidad Javeriana, BID"
+date: "Servicio Público de Empleo, 14 Nov 2023"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: inverse, middle
+
+class: inverse, middle
+
+```{r, setup, include = F}
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(
+  broom,
+  latex2exp, ggplot2, ggthemes, viridis, extrafont, gridExtra,
+  kableExtra,
+  dplyr, magrittr, knitr, parallel
+)
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+# Dark slate grey: #314f4f
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+# A blank theme for ggplot
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+```
+
+```{css echo = F}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+# Motivación
+
+---
+# Resumen
+
+1. .hi[**¿Qué?**] Probamos 4 "intervenciones" en el lenguaje utilizado en las publicaciones de empleo.
+
+--
+
+2. .hi[**¿Dónde?**] 5 países en América Latina y el Caribe (más de 5000 participantes).
+
+--
+
+3. .hi[**¿Cómo?**] Revelamos preferencias por anuncios de trabajo utilizando un experimento de elección discreta.
+
+--
+
+4. .hi[**Mecanismos**] Estereotipos de género relacionados con las habilidades y el uso de lenguaje inclusivo.
+
+--
+
+5. .hi[**Hallazgos**] Encontramos que el lenguaje es importante, y que **hombres y mujeres valoran la información y el lenguaje inclusivo en los anuncios de trabajo**. Sin embargo, las mujeres son más sensibles.
+
+---
+# Barreras de Lenguaje
+
+El lenguaje puede influir en la decisión de los buscadores de empleo de postularse o no a un trabajo.
+
+- .hi[Explícita]: se refiere a palabras en los anuncios de trabajo que prefieren o solicitan directamente un género específico.
+  - Ejemplo: Se busca un ingeniero para el puesto.
+- .hi[Implícita]: Se refiere a cómo las palabras o la redacción de una oferta de trabajo pueden desalentar a ciertos grupos de personas de postularse, incluso si tienen las habilidades y calificaciones necesarias.
+  -Ejemplo: nuestro equipo busca un líder audaz y ambicioso.
+
+---
+# Literatura
+
+
+- Discriminación de género explícita está correlacionada con la educación y la apariencia física *(Kuhn 2013, Gonzalez 2012, Hodel 2017, Ningrum 2020)*.
+
+- Ofertas de trabajo para puestos de toma de decisiones requieren más hombres en Argentina *(Carranza 2012)*.
+
+- Estereotipos de género fuertes se relacionan con brecha salarial de género en México *(Arceo 2022)*.
+
+---
+# Literatura
+
+- Anuncios de trabajo en industrias dominadas por hombres usan palabras masculinas y desalientan a las mujeres *(Gaucher, 2011)*.
+
+- Aumento del uso de palabras neutrales y menos masculinas en anuncios de trabajo en LinkedIn *(Tang 2017)*.
+
+- Género gramatical en idiomas desalienta a las mujeres a postularse *(Jakiela 2018, Horvath 2016)*.
+
+---
+
+# Nuestra contribución
+
+- Medimos cómo el lenguaje influye en las **preferencias** de los buscadores de empleo.
+
+- Usamos un lenguaje diverso que promueve la igualdad de género en las ofertas de trabajo.
+
+- Estudiamos 5 países de América Latina con diferentes condiciones laborales y normas de género.
+
+- Nos enfocamos en ocupaciones dominadas por hombres.
+
+---
+# Diseño - Sectores y Ocupaciones
+
+Al inicio del experimento, cada participante seleccionó un sector y una ocupación basados en su interés personal.
+
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+  'Sector Económico' = c('Construcción', '', 'Manufactura', '', 'Tecnologías de la Información', ''),
+  'Ocupaciones' = c('Albañil', 'Electricista', 'Operario', 'Supervisor de operaciones', 'Ingeniero', 'Desarrollador de software')
+), caption = 'Sectores y Ocupaciones', col.names = c('Sector Económico', 'Ocupaciones'))
+```
+
+---
+# Resumen de Tratamientos
+
+- Base: Habilidad orientada al género masculino.
+
+- Tratamientos
+  - **T1:** Descripción de habilidad.
+  - **T2:** Sin habilidad.
+  - **T3:** Declaración de diversidad.
+  - **T4:** Lenguaje inclusivo de género.
+  
+---
+# Base: Habilidad orientada al género masculino.
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+    'Ocupaciones' = c("Albañil y Electricista", "Operador",  "Supervisor de Operaciones", "Desarrollador",  "Ingeniero" ),
+    'Habilidad' = c("Proactivo, Autónomo y Competente", "Proactivo, Autónomo y Decidido", "Asertivo, Seguro de si mismo y Líder", "Persistente , Competente y Autónomo", "Decidido, Líder y Competente")
+)  , col.names = c('Ocupaciones', 'Habilidad'), options = list(
+  kable_format = "html",
+  table.attr = "style='font-size:80%'"
+)
+)
+```
+---
+
+# Tratamiento 1: Descripción
+
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+    'Habilidad' = c("Proactivo", "Autónomo", "Competente", "Decidido",  "Asertivo", "Seguro", "Líder", "Persistente"),
+    'Definición' = c("Iniciativa y anticipación a los problemas", "Capacidad para asumir responsabilidades, tomar decisiones y ofrecer soluciones de forma independiente", "Interés en conocer y dominar su trabajo", "Actúa de manera decidida y con confianza", "Capacidad para expresar sus opiniones de manera clara y respetuosa", "Confianza en su habilidad y juicio para tomar decisiones", "Capacidad para influir, motivar e inspirar a su equipo de trabajo para alcanzar un objetivo", "Perseverancia para cumplir los objetivos propuestos")
+)  , col.names = c('Habilidad', 'Definición'), 
+options = list(
+  kable_format = "html",
+  table.attr = "style='font-size:50%'"
+))
+```
+---
+# Tratamientos 2 al 4
+
+- **T2:** Elimina la habilidad de la descripción del puesto en el anuncio de trabajo.
+
+- **T3:** Introduce la siguiente declaración explícita de diversidad en el anuncio de trabajo: .hi[Estamos comprometidos a proporcionar igualdad de oportunidades en el empleo independientemente del género, orientación sexual, situación de discapacidad, nacionalidad y edad].
+
+- **T4:** Utiliza la terminación femenina y masculina de la ocupación y la escritura femenina y masculina de la habilidad. 
+---
+# Ejemplo
+
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+    'Comparación de tratamientos' = c("Base vs. T1 "),
+    'Oferta de trabajo 1' = c("La empresa busca un supervisor de operaciones que sea .hi[asertivo] para trabajar. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad" ),
+    'Oferta de trabajo 2' = c("La empresa busca un supervisor de operaciones que .hi[tenga la capacidad de expresar sus opiniones de manera clara y respetuosa con los demás]. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad"),
+    stringsAsFactors = FALSE
+), col.names = c('Comparación de tratamientos', 'Oferta de trabajo 1', 'Oferta de trabajo 2'), 
+)
+```
+
+---
+# Ejemplo
+
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+    'Comparación de tratamientos' = c("Base vs. T2 "),
+    'Oferta de trabajo 1' = c("La empresa busca un supervisor de operaciones que sea .hi[asertivo] para trabajar. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad " ),
+    'Oferta de trabajo 2' = c("La empresa busca Supervisor de Operaciones. Horario de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad."),
+    stringsAsFactors = FALSE
+), col.names = c('Comparación de tratamientos', 'Oferta de trabajo 1', 'Oferta de trabajo 2'), 
+)
+```
+
+---
+# Ejemplo
+
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+    'Comparación de tratamientos' = c("Base vs. T3 "),
+    'Oferta de trabajo 1' = c("La empresa busca un supervisor de operaciones que sea .hi[asertivo] para trabajar. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad." ),
+    'Oferta de trabajo 2' = c("La empresa busca un supervisor de operaciones que sea .hi[asertivo] para trabajar. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad. .hi[Estamos comprometidos a proporcionar igualdad de oportunidades en el empleo independientemente del género, orientación sexual, situación de discapacidad, nacionalidad y edad.]"),
+    stringsAsFactors = FALSE
+), col.names = c('Comparación de tratamientos', 'Oferta de trabajo 1', 'Oferta de trabajo 2'), 
+)
+```
+ 
+---
+# Ejemplo
+
+```{r, echo=FALSE}
+library(knitr)
+kable(data.frame(
+    'Comparación de tratamientos' = c("Base vs. T4 "),
+    'Oferta de trabajo 1' = c("La empresa busca un supervisor de operaciones que sea .hi[asertivo] para trabajar. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad." ),
+    'Oferta de trabajo 2' = c("La empresa busca un supervisor .hi[o supervisora] de operaciones que sea .hi[asertivo o asertiva] para trabajar. Horario: de lunes a viernes de 8 a.m. a 5 p.m. en el centro de la ciudad. "),
+    stringsAsFactors = FALSE
+), col.names = c('Comparación de tratamientos', 'Oferta de trabajo 1', 'Oferta de trabajo 2'), 
+)
+```
+---
+# Metodología Empírica
+
+## Descripción
+
+
+Nuestro conjunto de datos consiste en un panel de 18 publicaciones de empleo para cada individuo, dos para cada uno de los 9 conjuntos de elección presentados en el DCE. 
+
+$$Pr(Y_{ijs}=1|T_i) = \beta_1 + \beta_2T_2 + \beta_3T_3 + \beta_4T_4 + \beta_5T_5 + \lambda_{i,s} + \epsilon_{i,s}$$
+
+Donde $Y_{ijs}$ es una variable ficticia que indica que la opción $j$ fue seleccionada por el participante $i$ en la pantalla $s$. Estimamos los parámetros $\beta$ utilizando un modelo de probabilidad lineal y permitimos que los errores estén correlacionados dentro del par pantalla-participante.
+
+---
+class: tiny
+
+# Estadísticas Descriptivas
+```{r, echo=FALSE}
+library(knitr)
+kable(
+  data.frame(
+    'Variable' = c("Argentina", "Chile", "Colombia", "México", "Perú", "Mujeres", "Migrantes", "Edad 18-34", "Edad 35-54", "Edad 55+", "Total Ind"),
+    'N' = c(965, 1022, 1192, 1420, 1080, 2612, 681, 1817, 2896, 966,  5679),
+    'Media' = c(0.17, 0.18, 0.21, 0.25, 0.19, 0.46, 0.12, 0.32, 0.51, 0.17, NA),
+    'Desv. Est.' = c(0.37, 0.38, 0.41, 0.43, 0.39, 0.49, 0.33, 0.49, 0.49, 0.31, NA)
+  ),
+  col.names = c('Variable', 'N', 'Media', 'Desv. Est.')
+)
+```
+
+---
+# Estadísticas Descriptivas
+```{r, echo=FALSE}
+library(knitr)
+kable(
+  data.frame(
+    'Variable' = c("Primaria", "Secundaria", "Universitaria",  "Tamaño del Hogar", "Dependientes", "Distancia al centro de la ciudad", "Oferta laboral", "Empleados", "Horas de trabajo"),
+    'N' = c(171, 2214, 3294, 5679, 5679, 5401, 5679, 5679, 4017),
+    'Media' = c(0.03, 0.39, 0.58, 4.12, 0.27, 64.35, NA, 0.71, 38.29),
+    'Desv. Est.' = c(0.18, 0.48, 0.49, 3.83, 0.45, 108.4, NA, 0.45, 17.47)
+  ),
+  col.names = c('Variable', 'N', 'Media', 'Desv. Est.')
+)
+```
+---
+
+# Resultados
+
+```{r, ex2, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(80, 8, 87, 66, 40),
+  Mujeres = c(77, 6, 94, 79, 36),
+  Hombres = c(83, 10, 81, 53, 43)
+)
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA, alpha = 0.7) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("Mujeres" = "orange", "Hombres" = "darkslategrey")) +
+  labs(x = "", y = "Percentage", fill = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+```
+---
+# Base  ♂ = 43%  ♀ = 36% (♀-♂ = -7pp)
+
+```{r, ex3, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(80, 8, 87, 66, 40),
+  Mujeres = c(77, 6, 94, 79, 36),
+  Hombres = c(83, 10, 81, 53, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category == "Base: Masculino"
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+        
+```
+
+---
+# T1: ♂ = 40pp  ♀ = 41pp  (♀-♂ = 1pp)
+```{r, ex4, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(80, 8, 87, 66, 40),
+  Mujeres = c(77, 6, 94, 79, 36),
+  Hombres = c(83, 10, 81, 53, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T1: Descripción de Habilidad")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+
+```
+---
+# T2: ♂ = -33pp  ♀ = -30pp  (♀-♂ = 3pp)
+```{r, ex5, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(80, 8, 87, 66, 40),
+  Mujeres = c(77, 6, 94, 79, 36),
+  Hombres = c(83, 10, 81, 53, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T2: Sin habilidad")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+```
+---
+# T3: ♂ = 38pp  ♀ = 58pp (♀-♂ = 20pp**)
+```{r, ex6, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(80, 8, 87, 66, 40),
+  Mujeres = c(77, 6, 94, 79, 36),
+  Hombres = c(83, 10, 81, 53, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T3: Declaración de Diversidad")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+```
+---
+# T4: ♂ = 10pp  ♀ = 43pp (♀-♂ = 33pp)
+```{r, ex7, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(80, 8, 87, 66, 40),
+  Mujeres = c(77, 6, 94, 79, 36),
+  Hombres = c(83, 10, 81, 53, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T4: Texto inclusivo de género")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+
+```
+---
+# Tabla resumen
+```{r table, echo=FALSE, message=FALSE, warning=FALSE}
+# Load the required packages
+library(knitr)
+library(kableExtra)
+# Create a data frame
+df <- data.frame(
+  Tratamiento = c("T2: Descripción de Habilidad", "", "T3: Sin habilidad", "", "T4: Declaración de Diversidad", "", "T5: Texto inclusivo de género", "", "Constante", "", "N", ""),
+  Total = c(".40***", "(.02)", "--.32***", "(.01)", ".47***", "(.02)", ".26***", "(.03)", ".40***", "(.01)", "91998", ""),
+  Mujeres = c(".41***", "(.02)", "--.30***", "(.01)", ".58***", "(.01)", ".43***", "(.04)", ".36***", "(.01)", "43200", ""),
+  Hombres = c(".40***", "(.02)", "--.33***", "(.01)", ".38***", "(.02)", ".10***", "(.03)", ".43***", "(.01)", "48798", "")
+)
+
+# Convert the data frame into a nice R table
+df %>%
+  kable("html") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+```
+---
+
+layout: false
+class: inverse, middle
+# Colombia
+
+---
+# Resultados
+
+```{r, ex2_c, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(81, 4, 91, 63, 41),
+  Mujeres = c(75, 4, 94, 74, 38),
+  Hombres = c(86, 3, 87, 51, 43)
+)
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA, alpha = 0.7) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("Mujeres" = "orange", "Hombres" = "darkslategrey")) +
+  labs(x = "", y = "Percentage", fill = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+```
+
+---
+# T1: ♂ = 43pp  ♀ = 37pp  (♀-♂ = -6pp)
+```{r, ex4_c, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(81, 4, 91, 63, 41),
+  Mujeres = c(75, 4, 94, 74, 38),
+  Hombres = c(86, 3, 87, 51, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T1: Descripción de Habilidad")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+
+```
+---
+# T2: ♂ = -40pp  ♀ = -34pp  (♀-♂ = 6pp)
+```{r, ex5_c, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+   Total = c(81, 4, 91, 63, 41),
+  Mujeres = c(75, 4, 94, 74, 38),
+  Hombres = c(86, 3, 87, 51, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T2: Sin habilidad")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+```
+
+---
+# T3: ♂ = 44pp  ♀ = 56pp (♀-♂ = 12pp**)
+```{r, ex6_c, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(81, 4, 91, 63, 41),
+  Mujeres = c(75, 4, 94, 74, 38),
+  Hombres = c(86, 3, 87, 51, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T3: Declaración de Diversidad")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+```
+
+---
+# T4: ♂ = 8pp  ♀ = 36pp (♀-♂ = 28pp)
+```{r, ex7_c, echo = F, fig.height = 7}
+# Create a data frame
+df <- data.frame(
+  Category = c("T1: Descripción de Habilidad", "T2: Sin habilidad", "T3: Declaración de Diversidad", "T4: Texto inclusivo de género", "Base: Masculino"),
+  Total = c(81, 4, 91, 63, 41),
+  Mujeres = c(75, 4, 94, 74, 38),
+  Hombres = c(86, 3, 87, 51, 43)
+)
+
+# Add a new variable to indicate whether each row should be highlighted
+df$Highlight = df$Category %in% c("Base: Masculino", "T4: Texto inclusivo de género")
+
+# Convert the data frame to long format
+df_long <- tidyr::pivot_longer(df, cols = c("Mujeres", "Hombres"), names_to = "Gender", values_to = "Percentage")
+
+# Create two separate bar charts side by side with specified colors and increased text size
+ggplot(df_long, aes(x = Category, y = Percentage, fill = Highlight, alpha = Gender)) +
+  geom_bar(stat = "identity", position = "dodge", color = NA) +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_dodge(width = 0.9), hjust = -0.1, size = 3.5) +
+  coord_flip() +
+  facet_grid(. ~ Gender, scales = "free", space = "free") +
+  scale_fill_manual(values = c("TRUE" = "orange", "FALSE" = "grey")) +
+  scale_alpha_manual(values = c("Mujeres" = 0.7, "Hombres" = 0.7)) +
+  labs(x = "", y = "Percentage", fill = "", alpha = "") +
+  theme_minimal() +
+  theme(strip.background = element_blank(), 
+        strip.placement = "outside",
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        axis.text.x.top = element_blank(),
+        axis.ticks.x.top = element_blank(),
+        legend.position = "none",
+        text = element_text(size = 14),
+        axis.title = element_text(size = 16))
+
+```
+
+
+---
+layout: false
+class: inverse, middle
+# Conclusión
+---
+
+# Conclusión
+
+- El lenguaje importa tanto para hombres como para mujeres, ambos valoran la incorporación de más información y señales de inclusión.
+- Las mujeres son más sensibles que los hombres a estas señales de información e inclusión.
+- Aunque hay variación entre países, el signo de los coeficientes y su significancia permanecen inalterados, así como cuando analizamos otras características individuales. Esto implica que las preferencias por el lenguaje en los anuncios de trabajo son similares para diferentes tipos de individuos.
+- No encontramos diferencias por edad y nivel de educación, excepto en hombres mayores que muestran mayor rechazo a los anuncios de trabajo que no mencionan ninguna habilidad, en comparación con hombres más jóvenes.
+
+
+---
+# Conclusión
+
+- El tipo de información y señales que las empresas transmiten en sus anuncios pueden ser decisivas para atraer a más mujeres a postularse. Para reducir el desequilibrio de género en los resultados del mercado laboral, es clave usar palabras más neutrales en cuanto al género o información inclusiva para atraer a más mujeres.
+- Sería interesante probarlo con buscadores de empleo reales y en diversas sectores y ocupaciones.
+
+---
+layout: false
+class: inverse, middle
+# GRACIAS
+---
+```{r, ex7_c, echo = F, fig.height = 7}
+library(ggplot2)
+
+# Create a data frame with the coefficients and confidence intervals
+df <- data.frame(
+  term = rep(c("Hybrid Female", "Hybrid Male", "Remote Female", "Remote Male"), 2),
+  estimate = c(.12654724, .0707421, .10180656, .023798, .16958144, .06243892, .09031954, .01085049),
+  conf.low = c(.09636616, .0469032, .07069027, -.00891882, .0922658, .02816968, .03065257, -.03805167),
+  conf.high = c(.15672833, .094581, .13292285, .05651482, .24689708, .09670817, .14998652, .05975266),
+  dependents = rep(c("No", "Yes"), each = 4)
+)
+
+# Create a coefficient plot
+ggplot(df, aes(x = estimate, y = term, color = dependents)) +
+  geom_vline(xintercept = 0, linetype = 2, color = "grey") +
+  geom_point() +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high)) +
+  theme_minimal() +
+  labs(x = "Estimate", y = "") +
+  scale_color_manual(values = c("No" = "blue", "Yes" = "red"))
+````
+---
+exclude: true
+
+```{r, print pdfs, echo = F, eval = F}
+pagedown::chrome_print(
+  input = "Clase6.pdf",
+  timeout = 60
+)
+```

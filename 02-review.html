@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Outlier</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Ana Diaz" />
+    <meta name="date" content="2023-01-01" />
+    <script src="02-review_files/header-attrs/header-attrs.js"></script>
+    <link href="02-review_files/remark-css/default.css" rel="stylesheet" />
+    <link href="02-review_files/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="02-review_files/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Outlier
+]
+.subtitle[
+## Orden de nacimiento, estructura familiar y variables de personalidad
+]
+.author[
+### Ana Diaz
+]
+.date[
+### 2023
+]
+
+---
+
+class: inverse, middle
+
+
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 30px;
+    padding: 1em 4em 1em 4em;
+}
+&lt;/style&gt;
+.my-one-page-font {
+  font-size: 40px;
+}
+&lt;/style&gt;
+
+# Outliers: Una Breve Introducción
+
+
+---
+class: white-slide
+
+
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+class: left
+
+# ¿Qué es un Outlier?
+
+Un **outlier** o .hi[valor atípico] es una observación que se diferencia .mono[significativamente] de otras observaciones en un conjunto de datos.
+
+## Características Clave
+
+1. **Distancia de la norma**: Notablemente diferente de otras observaciones.
+2. **Identificación**: Se pueden identificar mediante técnicas estadísticas.
+3. **Impacto en el análisis**: Pueden afectar significativamente los resultados.
+4. **No siempre son errores**: Pueden ser variaciones reales y significativas.
+5. **Tratamiento de outliers**: Depende del contexto y objetivo del análisis.
+
+---
+layout: true
+
+# ¿Por qué son importantes?
+
+
+---
+
+--
+
+
+
+.pull-left[
+
+&lt;img src="02-review_files/figure-html/pop1-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Población**]
+
+]
+
+--
+
+.pull-right[
+
+&lt;img src="02-review_files/figure-html/scatter1-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Relación entre dos variables**]
+
+$$ y_i = 1.09 + 0.87 x_i + u_i $$
+
+$$ y_i = \beta_0 + \beta_1 x_i + u_i $$
+
+
+]
+
+---
+
+.pull-left[
+
+&lt;img src="02-review_files/figure-html/sample1-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Sample 1:** 30 random individuals]
+
+]
+
+--
+
+.pull-right[
+
+&lt;img src="02-review_files/figure-html/sample1 scatter-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+**Population relationship**
+&lt;br&gt;
+`\(y_i = 1.09 + 0.87 x_i + u_i\)`
+
+**Sample relationship**
+&lt;br&gt;
+`\(\hat{y}_i = 2.36 + 0.61 x_i\)`
+
+]
+
+]
+
+---
+count: false
+
+.pull-left[
+
+&lt;img src="02-review_files/figure-html/sample2-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Sample 2:** 30 random individuals]
+
+]
+
+.pull-right[
+
+&lt;img src="02-review_files/figure-html/sample2 scatter-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+**Population relationship**
+&lt;br&gt;
+`\(y_i = 1.09 + 0.87 x_i + u_i\)`
+
+**Sample relationship**
+&lt;br&gt;
+`\(\hat{y}_i = 2.79 + 0.56 x_i\)`
+
+]
+
+]
+---
+count: false
+
+.pull-left[
+
+&lt;img src="02-review_files/figure-html/sample3-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[**Sample 3:** 30 random individuals]
+
+]
+
+.pull-right[
+
+&lt;img src="02-review_files/figure-html/sample3 scatter-1.svg" style="display: block; margin: auto;" /&gt;
+
+.center[
+
+**Population relationship**
+&lt;br&gt;
+`\(y_i = 1.09 + 0.87 x_i + u_i\)`
+
+**Sample relationship**
+&lt;br&gt;
+`\(\hat{y}_i = 3.21 + 0.45 x_i\)`
+
+]
+
+]
+
+
+
+---
+layout: false
+#Ejemplo 
+
+&lt;center&gt;
+&lt;img src="https://media.licdn.com/dms/image/C5603AQHPmQpgS2E5fA/profile-displayphoto-shrink_800_800/0/1532632157787?e=2147483647&amp;v=beta&amp;t=wFVMQcrUGAEDaXL9KhyAr4vv0CAaoF9mcS11Qg-Yerc" width="700"&gt;
+&lt;/center&gt;
+
+---
+class: inverse, center, middle
+
+# 1. **Distancia de la norma**: Notablemente diferente de otras observaciones.
+
+
+
+---
+#Distribución del malgenio de la familia
+
+
+&lt;img src="02-review_files/figure-html/variance pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+#Palabras empleadas al hablar
+
+
+&lt;img src="02-review_files/figure-html/fig2 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+#Disponbilidad 
+
+
+&lt;img src="02-review_files/figure-html/fig3 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+# Buen gusto musical
+
+
+&lt;img src="02-review_files/figure-html/fig4 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+#Ya obtuvo parte de la herencia 
+
+
+&lt;img src="02-review_files/figure-html/fig5 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+#Amor absoluto y exclusivo de su madre 
+
+
+&lt;img src="02-review_files/figure-html/fig6 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+
+#Cantidad de matemáticas que estudió en el pregrado
+
+
+&lt;img src="02-review_files/figure-html/fig7 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+# ¿Diego es un?
+
+--
+
+&lt;center&gt;
+&lt;img src="https://images.ctfassets.net/c78bhj3obgck/5TiM66IiP5chN44ZndVr0R/42350eedf1abf8e13c010f9776f7ee03/Inside_Tink_-_changing_our_approach_to_outlier_detection_-_Blog_cover_2x.png?w=1856&amp;h=1134&amp;fm=webp&amp;q=95" width="1500"&gt;
+&lt;/center&gt;
+
+---
+# Otros ejemplos
+
+
+---
+
+class: inverse, center, middle
+
+# 2. **Causas**: es importante identificar qué generó este comportamiento.
+
+---
+#Posibles causas
+
+1. .hi[Factores biólogicos]
+2. Experiencia, madurez y .hi[vejez] de los padres
+3. .hi[Choques Externos]
+4. .hi[Interacciones] con los hermanos y .hi[ambiente] en el que creció
+
+---
+#1. Factores biológicos
+Cambios en el ambiente del útero o el sistema inmunológico materno que ocurren a lo largo de nacimientos sucesivos.
+
+&lt;img src="02-review_files/figure-html/fig8 pdf-1.svg" style="display: block; margin: auto;" /&gt;
+--
+Se salvó por .hi[15 días]
+---
+#2. .hi[Vejez] de los padres
+| Nombre | Edad de la Madre | Edad del Padre |
+|--------|------------------|----------------|
+| Pato   | 26               | 29             |
+| Lili   | 28               | 31             |
+| Nita   | 32               | 35             |
+| Juan   | 33               | 39             |
+| Diego  | 39               | 42             |
+---
+#2. .hi[Vejez] de los padres
+| Nombre | Edad de la Madre | Edad del Padre |
+|--------|------------------|----------------|
+| Pato   | 26               | 29             |
+| Lili   | 28               | 31             |
+| Nita   | 32               | 35             |
+| Juan   | 33               | 39             |
+| Diego  | 39 / 13 / 11              | 42             |
+
+--
+La podemos descartar
+---
+
+#3. Choques Externos
+
+![](dfd5.jpg)
+
+---
+#3. Choques Externos
+
+![](dfd7.jpg)
+---
+
+#4. Ambiente en el que creció
+
+![](dfd6.jpg)
+
+---
+
+class: inverse, center, middle
+
+# **Conclusión**
+
+---
+# Conclusion
+
+Diego es un OUTLIER por culpa de .hi[LILI]
+
+--
+
+![0.7](dfd9.jpg)
+---
+#Bono1: Nació siendo un OUTLIER
+![](dfd8.jpg)
+---
+#Bono2: 
+
+&lt;audio controls&gt;
+  &lt;source src="regueton.mp3" type="audio/mpeg"&gt;
+  Your browser does not support the audio element.
+&lt;/audio&gt;
+
+&lt;audio controls&gt;
+  &lt;source src="ñerada.mp3" type="audio/mpeg"&gt;
+  Your browser does not support the audio element.
+&lt;/audio&gt;
+
+---
+
+exclude: true
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
